@@ -1,16 +1,14 @@
 from fastapi import HTTPException, Depends
-from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 from jose import JWTError, jwt
 
 from repositories import user as user_repository
 from schemas.user import UserCreate
 from schemas.token import TokenData
-from utils.security import verify_password
+from utils.security import verify_password, oauth2_scheme
 from config import settings
 from database.connection import get_db
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)):
     credentials_exception = HTTPException(
